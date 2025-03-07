@@ -22,11 +22,11 @@ const GraphMaker: React.FC<Props> = () => {
     const newColumnName = useRef<HTMLInputElement>(null);
 
     const [data, setData] = useState([
-        { x: "Jan", sales: 400, revenue: 700, profit: 200 },
-        { x: "Feb", sales: 300, revenue: 600, profit: 150 },
-        { x: "Mar", sales: 500, revenue: 800, profit: 300 },
-        { x: "Apr", sales: 600, revenue: 900, profit: 400 },
-        { x: "May", sales: 700, revenue: 1000, profit: 500 },
+        { x: "Jan", sales: 400 },
+        { x: "Feb", sales: 300 },
+        { x: "Mar", sales: 500 },
+        { x: "Apr", sales: 600 },
+        { x: "May", sales: 700 },
     ]);
 
     const [variables, setVariables] = useState([
@@ -48,7 +48,7 @@ const GraphMaker: React.FC<Props> = () => {
         getCoreRowModel: getCoreRowModel(),
     })
 
-    const addNewColumn = async (event: FormEvent) => {
+    const addNewColumn = (event: FormEvent) => {
         event.preventDefault();
         
         if (newColumnName.current && newColumnColor.current) {
@@ -87,6 +87,17 @@ const GraphMaker: React.FC<Props> = () => {
         ))
     }
 
+    const addRow = () => {
+        const newRow = variables.map(col => col.accessorKey).reduce(
+            (obj, col: string) => ({ ...obj, [`${col}`]: 0 }), {x: "x", sales: 0}
+        );
+
+        setData(prev => [
+            ...prev,
+            newRow
+        ])
+    }
+
     return (
         <>
             <ResponsiveContainer width="100%" height={400}>
@@ -106,6 +117,7 @@ const GraphMaker: React.FC<Props> = () => {
                 <label htmlFor="new-col-color">Column: <input type="text" ref={newColumnColor} id="new-col-color"/></label>
                 <button type="submit">Add Column</button>
             </form>
+            <button onClick={addRow}>Add Row</button>
             <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "20px" }}>
                 <thead>
                 {table.getHeaderGroups().map((headerGroup) => (
